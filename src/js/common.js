@@ -1,4 +1,5 @@
 import { ImagesAPIService } from './pixabay-api.js';
+import { UnsplashAPIService } from './unsplash-api.js';
 import { download } from './file-downloader.js';
 
 import Notiflix from 'notiflix';
@@ -12,12 +13,25 @@ const btnMoreEl = document.querySelector('.load-more');
 const galleryEl = document.querySelector('.gallery');
 const btnDownloadEl = document.querySelector('.js-download');
 const btnSelectAllEl = document.querySelector('.js-select-all');
+const selectApiEl = document.querySelector('.js-select-api');
+
+console.dir(selectApiEl);
+console.dir(selectApiEl.value);
 
 formEl.addEventListener('submit', onFormSubmit);
 btnDownloadEl.addEventListener('click', onClickDownload);
 btnSelectAllEl.addEventListener('click', onClickSelectAll);
+selectApiEl.addEventListener('change', onChangeSelectAPI);
 
-const imagesAPIService = new ImagesAPIService();
+function onChangeSelectAPI(event) {
+  if (event.target.value === 'pixabay') {
+    imagesAPIService = new ImagesAPIService();
+  } else if (event.target.value === 'unsplash') {
+    imagesAPIService = new UnsplashAPIService();
+  }
+}
+
+let imagesAPIService = new ImagesAPIService();
 let selectURLs = new Set();
 
 const options = {
@@ -60,11 +74,12 @@ async function loadImages() {
   try {
     const images = await imagesAPIService.fetchImages();
 
+    console.log(images);
     console.log(imagesAPIService.page);
 
-    if (!imagesAPIService.totalHits) {
+    if (!imagesAPIService.total) {
       Notiflix.Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
+        'Sorry, there are no images matching your search query. Please try again.1'
       );
       observer.unobserve(btnMoreEl);
       return;
@@ -74,7 +89,7 @@ async function loadImages() {
       Notiflix.Notify.success(
         `Hooray! We found ${imagesAPIService.totalHits} images.`
       );
-      if (imagesAPIService.totalHits > imagesAPIService.per_page)
+      if (imagesAPIService.total > imagesAPIService.per_page)
         observer.observe(btnMoreEl);
     }
 
@@ -84,7 +99,7 @@ async function loadImages() {
   } catch (error) {
     console.log(error);
     Notiflix.Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
+      'Sorry, there are no images matching your search query. Please try again.2'
     );
     observer.unobserve(btnMoreEl);
   }
@@ -104,40 +119,18 @@ async function onFormSubmit(event) {
   Notiflix.Loading.remove();
 }
 
-function createMarkupCard({ hits }) {
-  const markupGallery = hits
-    .map(
-      ({
-        webformatURL,
-        largeImageURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      }) => {
-        return `<div class="photo-card">
-  <a class="photo-link" href="${largeImageURL}">
-    <img class="photo-img" src="${webformatURL}" alt="${tags}" loading="lazy" />
+function createMarkupCard(images) {
+  const markupGallery = images
+    .map(({ small, large, description }) => {
+      return `<div class="photo-card">
+  <a class="photo-link" href="${large}">
+    <img class="photo-img" src="${small}" alt="${description}" loading="lazy" />
   </a>
   <div class="info">
-    <p class="info-item">
-      <b>Likes </b>${likes}
-    </p>
-    <p class="info-item">
-      <b>Views </b>${views}
-    </p>
-    <p class="info-item">
-      <b>Comments</b> ${comments}
-    </p>
-    <p class="info-item">
-      <b>Downloads</b> ${downloads}
-    </p>
-  </div>
-  <label><input class="js-select" type="checkbox" data-url="${largeImageURL}">Select</label>
+  <label><input class="js-select" type="checkbox" data-url="${large}">Select</label> 
+  </div>  
 </div>`;
-      }
-    )
+    })
     .join(' ');
 
   galleryEl.insertAdjacentHTML('beforeend', markupGallery);

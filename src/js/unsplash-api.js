@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://pixabay.com/api/';
-const API_KEY = '8383420-2fd3a74e6fa7f1c43c1b3aa8e';
+const BASE_URL = 'https://api.unsplash.com/search/photos';
+const API_KEY = 'w4hMCRg4X6hfdvU-24REJPwuISlJNKHfaFPw9DbY-kw';
 
-export class ImagesAPIService {
+export class UnsplashAPIService {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
@@ -12,27 +12,30 @@ export class ImagesAPIService {
   }
 
   async fetchImages() {
+    const data = [];
     const responce = await axios.get(BASE_URL, {
       params: {
-        key: API_KEY,
-        q: this.searchQuery,
+        client_id: API_KEY,
+        query: this.searchQuery,
         page: this.page,
-        image_type: 'photo',
-        orientation: 'horizontal',
-        safesearch: 'true',
+        // image_type: 'photo',
+        // orientation: 'horizontal',
+        // safesearch: 'true',
         per_page: this.per_page,
       },
     });
 
-    this.total = responce.data.totalHits;
+    this.total = responce.data.total;
 
-    return responce.data.hits.map(element => {
+    return responce.data.results.map(element => {
       return {
-        small: element.webformatURL,
-        large: element.largeImageURL,
-        description: element.tags,
+        small: element.urls.small,
+        large: element.urls.full,
+        description: element.description,
       };
     });
+
+    // return responce.data;
   }
 
   incrementPage() {
