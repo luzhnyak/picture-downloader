@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Homework 11</title>
+    <title>Picture Downloader</title>
     <link
       href="https://unpkg.com/slim-select@latest/dist/slimselect.css"
       rel="stylesheet"
@@ -13,6 +13,9 @@
   <body>
     <header class="header">
       <form class="search-form" id="search-form">
+        <select class="input" name="api">
+          <option value="pixabay">Pixabay</option>
+        </select>
         <input
           class="input"
           type="text"
@@ -20,7 +23,9 @@
           autocomplete="off"
           placeholder="Search images..."
         />
-        <button type="submit" class="search-btn">Search</button>
+        <button type="submit" class="btn">Search</button>
+        <button type="button" class="btn js-select-all">Selectr All</button>
+        <button type="button" class="btn js-download">Download</button>
       </form>
     </header>
 
@@ -28,7 +33,7 @@
       <!-- Картки зображень -->
     </div>
 
-    <button type="button" class="load-more">Load more</button>
+    <button type="button" class="load-more js-load-more">Load more</button>
 
     <script src="index.js" type="module"></script>
   </body>
