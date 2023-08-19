@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://pixabay.com/api/';
-const API_KEY = '8383420-2fd3a74e6fa7f1c43c1b3aa8e';
+const BASE_URL = 'https://api.pexels.com/v1/search';
+const API_KEY = 'Y9XQ4Q7ZwV6yIB0oPSHmZkzMd1ItP34WbNjOhElrk3kp56QgivTYdL75';
 
-export class PixabayAPIService {
+export class PexelsAPIService {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
@@ -15,22 +15,23 @@ export class PixabayAPIService {
     const responce = await axios.get(BASE_URL, {
       params: {
         key: API_KEY,
-        q: this.searchQuery,
+        query: this.searchQuery,
         page: this.page,
-        image_type: 'photo',
-        orientation: 'horizontal',
-        safesearch: 'true',
+        // image_type: 'photo',
+        // orientation: 'horizontal',
+        // safesearch: 'true',
         per_page: this.per_page,
       },
+      headers: { Authorization: API_KEY },
     });
 
-    this.total = responce.data.totalHits;
+    this.total = responce.data.total_results;
 
-    return responce.data.hits.map(element => {
+    return responce.data.photos.map(element => {
       return {
-        small: element.webformatURL,
-        large: element.largeImageURL,
-        description: element.tags,
+        small: element.src.large,
+        large: element.src.original,
+        description: element.alt,
       };
     });
   }

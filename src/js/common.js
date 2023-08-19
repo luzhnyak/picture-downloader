@@ -1,5 +1,7 @@
-import { ImagesAPIService } from './pixabay-api.js';
+import { PixabayAPIService } from './pixabay-api.js';
 import { UnsplashAPIService } from './unsplash-api.js';
+import { PexelsAPIService } from './pexels-api.js';
+
 import { download } from './file-downloader.js';
 
 import Notiflix from 'notiflix';
@@ -25,13 +27,15 @@ selectApiEl.addEventListener('change', onChangeSelectAPI);
 
 function onChangeSelectAPI(event) {
   if (event.target.value === 'pixabay') {
-    imagesAPIService = new ImagesAPIService();
+    imagesAPIService = new PixabayAPIService();
   } else if (event.target.value === 'unsplash') {
     imagesAPIService = new UnsplashAPIService();
+  } else if (event.target.value === 'pexels') {
+    imagesAPIService = new PexelsAPIService();
   }
 }
 
-let imagesAPIService = new ImagesAPIService();
+let imagesAPIService = new PixabayAPIService();
 let selectURLs = new Set();
 
 const options = {
