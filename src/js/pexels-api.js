@@ -32,6 +32,10 @@ export class PexelsAPIService {
         small: element.src.large,
         large: element.src.original,
         description: element.alt,
+        filename:
+          element.src.original.split('/')[
+            element.src.original.split('/').length - 1
+          ],
       };
     });
   }

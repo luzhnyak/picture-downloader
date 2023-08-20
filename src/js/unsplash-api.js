@@ -28,10 +28,14 @@ export class UnsplashAPIService {
     this.total = responce.data.total;
 
     return responce.data.results.map(element => {
+      const url = element.urls.full;
+      const fname = url.split('/')[url.split('/').length - 1].split('?')[0];
+      const exp = url.split('fm=')[1].split('&')[0];
       return {
         small: element.urls.small,
         large: element.urls.full,
         description: element.description,
+        filename: `${fname}.${exp}`,
       };
     });
 

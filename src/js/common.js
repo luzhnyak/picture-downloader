@@ -18,8 +18,8 @@ const btnDownloadEl = document.querySelector('.js-download');
 const btnSelectAllEl = document.querySelector('.js-select-all');
 const selectApiEl = document.querySelector('.js-select-api');
 
-console.dir(selectApiEl);
-console.dir(selectApiEl.value);
+// console.dir(selectApiEl);
+// console.dir(selectApiEl.value);
 
 formEl.addEventListener('submit', onFormSubmit);
 btnDownloadEl.addEventListener('click', onClickDownload);
@@ -27,6 +27,7 @@ btnSelectAllEl.addEventListener('click', onClickSelectAll);
 selectApiEl.addEventListener('change', onChangeSelectAPI);
 
 function onChangeSelectAPI(event) {
+  selectURLs.clear();
   if (event.target.value === 'pixabay') {
     imagesAPIService = new PixabayAPIService();
   } else if (event.target.value === 'unsplash') {
@@ -81,8 +82,8 @@ async function loadImages() {
   try {
     const images = await imagesAPIService.fetchImages();
 
-    console.log(images);
-    console.log(imagesAPIService.page);
+    // console.log(images);
+    // console.log(imagesAPIService.page);
 
     if (!imagesAPIService.total) {
       Notiflix.Notify.failure(
@@ -128,13 +129,13 @@ async function onFormSubmit(event) {
 
 function createMarkupCard(images) {
   const markupGallery = images
-    .map(({ small, large, description }) => {
+    .map(({ small, large, description, filename }) => {
       return `<div class="photo-card">
   <a class="photo-link" href="${large}">
     <img class="photo-img" src="${small}" alt="${description}" loading="lazy" />
   </a>
   <div class="info">
-  <label><input class="js-select" type="checkbox" data-url="${large}">Select</label> 
+  <label><input class="js-select" type="checkbox" data-url="${large}" data-filename="${filename}">Select</label> 
   </div>  
 </div>`;
     })
@@ -151,17 +152,19 @@ function createMarkupCard(images) {
 }
 
 function select(element) {
-  const url = element.dataset.url;
+  const { url, filename } = element.dataset;
+
   if (element.checked) {
-    selectURLs.add(url);
+    selectURLs.add(`${url}###${filename}`);
   } else {
-    selectURLs.delete(url);
+    selectURLs.delete(`${url}###${filename}`);
   }
 }
 
 function onClickDownload(event) {
-  selectURLs.forEach(url => {
-    const filename = url.split('/')[url.split('/').length - 1];
+  selectURLs.forEach(img => {
+    const url = img.split('###')[0];
+    const filename = img.split('###')[1];
     download(url, filename);
   });
 }

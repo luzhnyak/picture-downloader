@@ -12,13 +12,13 @@
   </head>
   <body>
     <header class="header">
+      <select class="input js-select-api" name="api">
+        <option value="pixabay" selected>Pixabay</option>
+        <option value="unsplash">Unsplash</option>
+        <option value="pexels">Pexels</option>
+        <option value="giphy">Giphy</option>
+      </select>
       <form class="search-form" id="search-form">
-        <select class="input js-select-api" name="api">
-          <option value="pixabay" selected>Pixabay</option>
-          <option value="unsplash">Unsplash</option>
-          <option value="pexels">Pexels</option>
-          <option value="giphy">Giphy</option>
-        </select>
         <input
           class="input"
           type="text"
@@ -27,16 +27,18 @@
           placeholder="Search images..."
         />
         <button type="submit" class="btn">Search</button>
+      </form>
+      <div>
         <button type="button" class="btn js-select-all">Selectr All</button>
         <button type="button" class="btn js-download">Download</button>
-      </form>
+      </div>
     </header>
 
     <div class="gallery">
       <!-- Картки зображень -->
     </div>
 
-    <button type="button" class="load-more js-load-more">Load more</button>
+    <div class="load-more js-load-more"></div>
 
     <script src="index.js" type="module"></script>
   </body>

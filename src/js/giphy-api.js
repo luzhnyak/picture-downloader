@@ -25,8 +25,6 @@ export class GiphyAPIService {
       },
     });
 
-    console.log(responce.data);
-
     this.total = responce.data.pagination.total_count;
 
     return responce.data.data.map(element => {
