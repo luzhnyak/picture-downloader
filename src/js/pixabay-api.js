@@ -24,6 +24,7 @@ export class PixabayAPIService {
       },
     });
 
+    console.log(responce.data);
     this.total = responce.data.totalHits;
 
     return responce.data.hits.map(element => {

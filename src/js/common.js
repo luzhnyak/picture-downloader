@@ -1,6 +1,7 @@
 import { PixabayAPIService } from './pixabay-api.js';
 import { UnsplashAPIService } from './unsplash-api.js';
 import { PexelsAPIService } from './pexels-api.js';
+import { GiphyAPIService } from './giphy-api.js';
 
 import { download } from './file-downloader.js';
 
@@ -32,6 +33,8 @@ function onChangeSelectAPI(event) {
     imagesAPIService = new UnsplashAPIService();
   } else if (event.target.value === 'pexels') {
     imagesAPIService = new PexelsAPIService();
+  } else if (event.target.value === 'giphy') {
+    imagesAPIService = new GiphyAPIService();
   }
 }
 
