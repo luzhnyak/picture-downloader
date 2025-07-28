@@ -115,6 +115,7 @@ async function loadImages() {
 
 async function onFormSubmit(event) {
   event.preventDefault();
+  selectURLs.clear();
   if (!event.target.elements.searchQuery.value.trim()) {
     return;
   }
@@ -161,12 +162,33 @@ function select(element) {
   }
 }
 
-function onClickDownload(event) {
-  selectURLs.forEach(img => {
-    const url = img.split('###')[0];
-    const filename = img.split('###')[1];
-    download(url, filename);
-  });
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function downloadBatch(urls, batchSize = 10, pauseMs = 1000) {
+  const items = Array.from(urls);
+
+  for (let i = 0; i < items.length; i += batchSize) {
+    const batch = items.slice(i, i + batchSize);
+
+    batch.forEach(img => {
+      const [url, filename] = img.split('###');
+      download(url, filename);
+    });
+
+    console.log(
+      `Завантажено ${Math.min(i + batchSize, items.length)} з ${items.length}`
+    );
+
+    if (i + batchSize < items.length) {
+      await delay(pauseMs); // Пауза між пакетами
+    }
+  }
+}
+
+async function onClickDownload(event) {
+  await downloadBatch(selectURLs, 10, 2000); // 10 файлів з паузою 2 секунди
 }
 
 function onClickSelectAll() {
