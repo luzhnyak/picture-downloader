@@ -1,2 +1,2 @@
-# picture-downloader
+# Picture Downloader
 Picture Downloader
